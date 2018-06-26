@@ -43,6 +43,11 @@
             <version>${scala.version.major.minor}.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxscala_${scala.version.major.minor}</artifactId>
+            <version>0.26.5</version>
+        </dependency>
 
         <!--Test dependencies-->
         <dependency>
