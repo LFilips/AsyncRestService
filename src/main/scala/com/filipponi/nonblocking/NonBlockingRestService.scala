@@ -1,15 +1,15 @@
-package com.filipponi.SpringBootScalaFull
+package com.filipponi.nonblocking
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
 /** This configuration will simulate to have a class with a main method **/
 @SpringBootApplication
-class AsyncRestService
+class NonBlockingRestService
 
-object AsyncRestService {
+object NonBlockingRestService {
   def main(args: Array[String]): Unit = {
-    SpringApplication.run(classOf[AsyncRestService])
+    SpringApplication.run(classOf[NonBlockingRestService])
   }
 }
 

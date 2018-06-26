@@ -1,4 +1,4 @@
-package com.filipponi.SpringBootScalaFull.resource.resource
+package com.filipponi.nonblocking.resource
 
 import org.scalatest.{FlatSpec, Matchers}
 

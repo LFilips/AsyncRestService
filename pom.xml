@@ -23,7 +23,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <scala.version.major.minor>2.12</scala.version.major.minor>
-        <scala.version>${scala.version.major.minor}.4</scala.version>
+        <scala.version>${scala.version.major.minor}.1</scala.version>
     </properties>
 
     <dependencies>
