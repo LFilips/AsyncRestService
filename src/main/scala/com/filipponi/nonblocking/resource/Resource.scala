@@ -1,49 +1,42 @@
 package com.filipponi.nonblocking.resource
 
-import java.util.concurrent.{Callable, Executors}
-
+import com.filipponi.nonblocking.service.{Combinator, SampleBusinessLogic}
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.{RequestMapping, RequestMethod, RestController}
 import org.springframework.web.context.request.async.DeferredResult
 
 @RestController
-class Resource {
+@Autowired
+class Resource(sampleBusinessLogic: SampleBusinessLogic) {
 
-  val threadPool = Executors.newFixedThreadPool(2)
   val Logger = LoggerFactory.getLogger(getClass.getName)
 
   /**
-    *
-    * I need support from the framework for releasing the tomcat thread while waiting otherwise there is no differnce using
-    * the reactive framework or not.
-    *
+    * Using deferred result for releasing the request thread and setting it back using RxScheduler
     * @return
     */
-  @RequestMapping(path = Array("/nonBlockingHello"), method = Array(RequestMethod.GET), produces = Array("application/json"))
-  def nonBlockingHello(): DeferredResult[String] = {
+  @RequestMapping(path = Array("/nonBlockingEndpoint"), method = Array(RequestMethod.GET), produces = Array("application/json"))
+  def nonBlockingHello(): DeferredResult[ResponseEntity[Combinator]] = {
 
-    Logger.debug("Processing the request! This should be nio tomcat thread")
-    //I should start a process that will set the result in another thread
-    val deferredResult = new DeferredResult[String]()
+    val deferredResult = new DeferredResult[ResponseEntity[Combinator]]()
 
-    /**
-      * I can create a callable that will be processed by the executor service,
-      * and this will be responsible of setting the result and give back the response.
-      */
-    val callable = new Callable[Unit] {
-      override def call(): Unit = {
-        Logger.debug("Inside the callable, this should be executor service thread pool")
-        Thread.sleep(1000)
-        deferredResult.setResult("""{ "result":"This is my non blocking result"}""")
-      }
-    }
+    val observable = sampleBusinessLogic.getDataFromVariousSource()
 
-    threadPool.submit(callable)
+    observable.subscribe(
+      combinator => deferredResult.setResult(ResponseEntity.ok(combinator)),
+      throwable => deferredResult.setResult(ResponseEntity.status(500).build()),
+      () => Unit)
 
     deferredResult
   }
 
 }
+
+
+
+
 
 
 
